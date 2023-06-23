@@ -8,8 +8,8 @@ use websocket::{self, sync::Client, Message, OwnedMessage};
 
 pub fn handle_login(
     client: &mut Client<TcpStream>,
-    reader: &mut BufReader<&mut ChildStdout>,
-    writer: &mut BufWriter<&mut ChildStdin>,
+    reader: &mut BufReader<ChildStdout>,
+    writer: &mut BufWriter<ChildStdin>,
 ) -> Option<i64> {
     let username = read_line(reader);
     let password = read_line(reader);
@@ -34,6 +34,7 @@ pub fn handle_login(
                 None
             }
         }
+    // } else if let OwnedMessage::Pong(_) = recived {
     } else {
         eprintln!("ERROR: login got not text response.");
         None
@@ -42,8 +43,8 @@ pub fn handle_login(
 
 pub fn handle_signup(
     client: &mut Client<TcpStream>,
-    reader: &mut BufReader<&mut ChildStdout>,
-    writer: &mut BufWriter<&mut ChildStdin>,
+    reader: &mut BufReader<ChildStdout>,
+    writer: &mut BufWriter<ChildStdin>,
 ) {
     let username = read_line(reader);
     let password = read_line(reader);
