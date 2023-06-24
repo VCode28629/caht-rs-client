@@ -3,22 +3,12 @@ use std::{
     net::TcpStream,
     process::{ChildStdin, ChildStdout},
 };
-use websocket::{self, sync::{Client, Reader, Writer}, Message, OwnedMessage};
+use websocket::{self, sync::{Reader, Writer}, Message, OwnedMessage};
 
-pub fn receive_message(client: &mut Client<TcpStream>) -> OwnedMessage {
-    let s = client.recv_message().unwrap();
-    eprintln!("Received: {:?}", s);
-    s
-}
 pub fn reader_receive_message(client: &mut Reader<TcpStream>) -> OwnedMessage {
     let s = client.recv_message().unwrap();
     eprintln!("Received: {:?}", s);
     s
-}
-
-pub fn send_message(client: &mut Client<TcpStream>, message: Message) {
-    eprintln!("Sending: {:?}", message);
-    client.send_message(&message).unwrap();
 }
 
 pub fn sender_send_message(client: &mut Writer<TcpStream>, message: Message) {

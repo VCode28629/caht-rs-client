@@ -5,7 +5,7 @@ use std::{
     process::{ChildStdin, ChildStdout},
     sync::{mpsc::Sender, Arc, Mutex},
 };
-use websocket::{self, sync::Client, Message, OwnedMessage};
+use websocket::{self, Message, OwnedMessage};
 
 pub fn handle_login(
     sender: &Arc<Mutex<websocket::sync::Writer<TcpStream>>>,
@@ -21,9 +21,7 @@ pub fn handle_login(
         &mut sender,
         Message::text(format!("LOGIN\n{}\n{}", username, password)),
     );
-    let mut repeat = true;
-    while repeat {
-        repeat = false;
+    loop {
         let recived = reader_receive_message(receiver);
         match recived {
             OwnedMessage::Text(s) => {
@@ -35,18 +33,17 @@ pub fn handle_login(
                     }
                     "WRONG" => {
                         write_line(writer, "WRONG");
-
-                        return None;                    }
+                        return None;
+                    }
                     _ => {
                         eprintln!("ERROR: Invalid login response: {}", s);
-
-                        return None;                    }
+                        return None;
+                    }
                 }
                 // } else if let OwnedMessage::Pong(_) = recived {
             }
             OwnedMessage::Ping(s) => {
                 tx.send(s).unwrap();
-                repeat = true;
                 continue;
             }
             _ => {
@@ -55,7 +52,6 @@ pub fn handle_login(
             }
         }
     }
-    None
 }
 
 pub fn handle_signup(

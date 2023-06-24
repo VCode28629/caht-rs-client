@@ -1,11 +1,11 @@
 use crate::process_io::*;
 use std::{
-    io::{BufReader, BufWriter},
+    io::BufWriter,
     net::TcpStream,
-    process::{ChildStdin, ChildStdout},
+    process::ChildStdin,
     sync::{mpsc::Sender, Arc, Mutex},
 };
-use websocket::{self, sync::Client, Message, OwnedMessage};
+use websocket::{self, Message, OwnedMessage};
 
 pub fn get_friend_list(
     uid: i64,
@@ -80,9 +80,7 @@ pub fn get_username(
 ) -> String {
     let mut sender = sender.lock().unwrap();
     sender_send_message(&mut sender, Message::text(format!("get username\n{uid}")));
-    let mut repeat = true;
-    while repeat {
-        repeat = false;
+    loop {
         let msg = reader_receive_message(receiver);
         match msg {
             OwnedMessage::Text(text) => {
@@ -90,7 +88,6 @@ pub fn get_username(
             }
             OwnedMessage::Ping(s) => {
                 tx.send(s).unwrap();
-                repeat = true;
                 continue;
             }
             _ => {
@@ -98,5 +95,4 @@ pub fn get_username(
             }
         }
     }
-    "".to_string()
 }
