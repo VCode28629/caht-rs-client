@@ -166,6 +166,9 @@ fn start(
                 let msg = Message::text(format!("add friend\n{uid}\n{id}"));
                 sender_send_message(&mut sender, msg);
             }
+            "Exit" => {
+                eprintln!("Exiting...");
+            }
             _ => {
                 eprintln!("unreachable input: {s}");
                 unreachable!()
@@ -178,7 +181,6 @@ fn start(
 }
 
 pub fn main() {
-    env_logger::init();
     // read configuration
     let mut config = configparser::ini::Ini::new();
     config.load("config.ini").unwrap();
