@@ -168,6 +168,7 @@ fn start(
             }
             "Exit" => {
                 eprintln!("Exiting...");
+                return;
             }
             _ => {
                 eprintln!("unreachable input: {s}");
