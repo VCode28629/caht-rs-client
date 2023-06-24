@@ -40,7 +40,6 @@ pub fn handle_login(
                         return None;
                     }
                 }
-                // } else if let OwnedMessage::Pong(_) = recived {
             }
             OwnedMessage::Ping(s) => {
                 tx.send(s).unwrap();
